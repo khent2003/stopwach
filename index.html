@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Stopwatch</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #431c59, #2d1033);
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .timer {
+            font-size: 70px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .labels {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            font-size: 14px;
+            color: #d1d1d1;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            margin: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .start {
+            background-color: #ff69b4;
+            color: white;
+        }
+
+        .start:hover {
+            background-color: #ff1493;
+            transform: scale(1.1);
+        }
+
+        .reset {
+            background-color: #444;
+            color: white;
+        }
+
+        .reset:hover {
+            background-color: #222;
+            transform: scale(1.1);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="timer" id="display">00:00:00</div>
+        <div class="labels">
+            <span>Minutes</span>
+            <span>Seconds</span>
+            <span>Centiseconds</span>
+        </div>
+        <div class="buttons">
+            <button class="start" id="toggle">Start</button>
+            <button class="reset" id="reset">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let minutes = 0, seconds = 0, centiseconds = 0;
+        let running = false;
+        let interval;
+
+        function updateDisplay() {
+            document.getElementById("display").innerText =
+                (minutes < 10 ? "0" : "") + minutes + ":" +
+                (seconds < 10 ? "0" : "") + seconds + ":" +
+                (centiseconds < 10 ? "0" : "") + centiseconds;
+        }
+
+        function startStopwatch() {
+            interval = setInterval(() => {
+                centiseconds++;
+                if (centiseconds === 100) {
+                    centiseconds = 0;
+                    seconds++;
+                }
+                if (seconds === 60) {
+                    seconds = 0;
+                    minutes++;
+                }
+                updateDisplay();
+            }, 10);
+        }
+
+        document.getElementById("toggle").addEventListener("click", function() {
+            if (running) {
+                clearInterval(interval);
+                this.innerText = "Start";
+            } else {
+                startStopwatch();
+                this.innerText = "Pause";
+            }
+            running = !running;
+        });
+
+        document.getElementById("reset").addEventListener("click", function() {
+            clearInterval(interval);
+            minutes = 0;
+            seconds = 0;
+            centiseconds = 0;
+            updateDisplay();
+            document.getElementById("toggle").innerText = "Start";
+            running = false;
+        });
+
+        updateDisplay();
+    </script>
+</body>
+</html>
